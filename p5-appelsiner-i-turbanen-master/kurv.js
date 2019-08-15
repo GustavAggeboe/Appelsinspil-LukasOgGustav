@@ -49,7 +49,7 @@ function Kurv(x, y, bredde, dybde, speed) {
     }
 
     this.grebet = function(xa, ya, ra) {
-        var tolerence = 12;
+        let tolerence = 12;
         if ((ya < this.y+tolerence && ya > this.y-tolerence) && xa > this.x+ra && xa < this.x+this.bred-ra) {
             return true;
         }
