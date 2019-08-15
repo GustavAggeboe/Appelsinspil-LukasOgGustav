@@ -164,7 +164,7 @@ function keyPressed() {
         state = "game";
     }
 
-    if (state == "end") {
+    if (state == "end" && hasShowedMessageTwo) {
         // restart game
         missed = 0;
         score = 0;
