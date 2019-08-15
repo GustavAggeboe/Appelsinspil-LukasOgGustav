@@ -21,7 +21,8 @@ function Kurv(x, y, bredde, dybde, speed) {
         rect(this.x, this.y, this.bred, this.dyb);
     }
 
-    this.move = function(dir) {
+    this.move = function(dir) { /*Denne funktion gør det muligt at flytte turbanen smoothly
+                                i stedet for at man skal trykke på knapperne hver gang man vil rykke den en lille smule*/
         if (dir == "up") {
             this.y -= this.speed;
             if (this.y < 0) {
