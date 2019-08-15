@@ -45,6 +45,8 @@ function StartLoop() {
     background(0);
     fill(255);
     textAlign(CENTER);
+    textSize(72);
+    text("Welcome to our game", width / 2, height / 4);
     textSize(35);
     text("Press any key to start!", width / 2, height / 2);
 }
@@ -63,13 +65,13 @@ function EndLoop() {
     if (!hasShowedMessageOne) {
         fill(255);
         textAlign(CENTER);
-        textSize(35);
+        textSize(140);
         text("Game Over", width / 2, height / 2);
         hasShowedMessageOne = true;
     }
     if (!hasShowedMessageTwo && countdownUntilRestart <= 0) {
-        textSize(20);
-        text("Press any key to try again", width / 2, height / 2 + 25);
+        textSize(35);
+        text("Press any key to try again", width / 2, height / 2 + 55);
         hasShowedMessageTwo = true;
     }
 
@@ -168,7 +170,9 @@ function keyPressed() {
         // restart game
         missed = 0;
         score = 0;
-        hasShowedMessage = false;
+        hasShowedMessageOne = false;
+        hasShowedMessageTwo = false;
+        countdownUntilRestart = 60;
         state = "start";
     }
 }
