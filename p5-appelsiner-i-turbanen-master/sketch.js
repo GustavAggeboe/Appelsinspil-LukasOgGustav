@@ -24,7 +24,7 @@ let state = "start";
 
 function setup() {
     createCanvas(1365, 700);
-    turban = new Kurv(width / 2, height / 2, 90, 50, 8);
+    turban = new Kurv(width / 2, height / 2, 1500, 50, 10);
 }
 
 function draw() {
@@ -36,9 +36,9 @@ function draw() {
             GameLoop();
             break;
         case "end":
-
+            EndLoop();
             break;
-      }
+    }
 }
 
 function StartLoop() {
@@ -50,6 +50,13 @@ function StartLoop() {
 }
 
 function GameLoop() {
+    background(0);
+    move();
+    checkScore();
+    display();
+}
+
+function EndLoop() {
     background(0);
     move();
     checkScore();

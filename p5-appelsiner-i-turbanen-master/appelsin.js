@@ -1,11 +1,11 @@
 
 class Appelsin {
-
     constructor() {
         this.rad = 20;
         this.x = this.rad;
-        this.y = 200 + Math.random() * 350;
-        this.xspeed = 4 + 10 * Math.random();
+        this.spawnMin = 200;
+        this.y = this.spawnMin + Math.random() * (height - this.spawnMin);
+        this.xspeed = 2 + 10 * Math.random();
         this.yspeed = -10;
         this.gravity = .1;
         this.col = [200,100,0];
