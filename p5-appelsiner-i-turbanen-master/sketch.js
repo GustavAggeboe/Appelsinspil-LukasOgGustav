@@ -24,7 +24,7 @@ let state = "start";
 
 function setup() {
     createCanvas(1365, 700);
-    turban = new Kurv(width / 2, height / 2, 1500, 50, 10);
+    turban = new Kurv(width / 2, height / 2, 90, 30, 10);
 }
 
 function draw() {
@@ -56,11 +56,17 @@ function GameLoop() {
     display();
 }
 
+var hasShowedMessage = false;
 function EndLoop() {
-    background(0);
-    move();
-    checkScore();
-    display();
+    if (!hasShowedMessage) {
+        fill(255);
+        textAlign(CENTER);
+        textSize(35);
+        text("Game Over", width / 2, height / 2);
+        textSize(20);
+        text("Press any key to try again", width / 2, height / 2 + 25);
+        hasShowedMessage = true;
+    }
 }
 
 function display() {
@@ -118,6 +124,10 @@ function checkScore() {
             }
         }
     }
+
+    if (missed >= 1) {
+        state = "end";
+    }
 }
 
 function shootNew() {
@@ -144,6 +154,13 @@ function keyPressed() {
         state = "game";
     }
 
+    if (state == "end") {
+        // restart game
+        missed = 0;
+        score = 0;
+        hasShowedMessage = false;
+        state = "start";
+    }
 }
 function keyReleased() {
     if (key == "d" || key == "D") {
