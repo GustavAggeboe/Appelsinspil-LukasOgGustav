@@ -9,10 +9,10 @@ function Kurv(x, y, bredde, dybde, speed) {
      * dette objekt ved hjælp af nøgleordet this
      */
     
-    this.x = x;
-    this.y = y;
     this.bred = bredde;
     this.dyb = dybde;
+    this.x = width / 2 - bredde / 2;
+    this.y = height / 1.3 - dybde / 2;
     this.speed = speed;
     this.col = [250,230,150];
 
@@ -49,7 +49,7 @@ function Kurv(x, y, bredde, dybde, speed) {
     }
 
     this.grebet = function(xa, ya, ra) {
-        var tolerence = 5;
+        var tolerence = 12;
         if ((ya < this.y+tolerence && ya > this.y-tolerence) && xa > this.x+ra && xa < this.x+this.bred-ra) {
             return true;
         }
