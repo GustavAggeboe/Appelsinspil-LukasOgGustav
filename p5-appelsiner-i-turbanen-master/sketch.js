@@ -18,14 +18,38 @@ let score = 0;
 let missed = 0;
 
 let tid = 100;
-let tidTæller = tid + Math.random() * tid;
+let tidTæller = 40 + tid + Math.random() * tid;
+
+let state = "start";
 
 function setup() {
-    createCanvas(750, 600);
-    turban = new Kurv(width / 2, height / 2, 90, 50, 5);
+    createCanvas(1365, 700);
+    turban = new Kurv(width / 2, height / 2, 90, 50, 8);
 }
 
 function draw() {
+    switch(state) {
+        case "start":
+            StartLoop();
+            break;
+        case "game":
+            GameLoop();
+            break;
+        case "end":
+
+            break;
+      }
+}
+
+function StartLoop() {
+    background(0);
+    fill(255);
+    textAlign(CENTER);
+    textSize(35);
+    text("Press any key to start!", width / 2, height / 2);
+}
+
+function GameLoop() {
     background(0);
     move();
     checkScore();
@@ -33,13 +57,6 @@ function draw() {
 }
 
 function display() {
-    
-    fill(255);
-    text("Score: " + score, width - 80, 30);
-
-    fill(255);
-    text("Missed: " + missed, width - 80, 60);
-    
     // Her vises turbanen - foreløbig blot en firkant
     turban.tegn();
 
@@ -50,9 +67,16 @@ function display() {
 
     if (tidTæller <= 0) {
         shootNew();
-        tidTæller = tid + Math.random() * tid;
+        tidTæller = 40 + tid + Math.random() * tid;
     }
     tidTæller -= 1;
+
+
+    textAlign(LEFT);
+    fill(255);
+    text("Score: " + score, 10, 40);
+    fill(255);
+    text("Missed: " + missed, 10, 80);
 }
 
 function move() {
@@ -107,6 +131,10 @@ function keyPressed() {
     }
     if (key == "s" || key == "S") {
         goingDown = true;
+    }
+
+    if (state == "start") {
+        state = "game";
     }
 
 }
