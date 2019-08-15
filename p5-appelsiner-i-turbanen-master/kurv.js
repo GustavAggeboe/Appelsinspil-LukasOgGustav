@@ -16,12 +16,12 @@ function Kurv(x, y, bredde, dybde, speed) {
     this.speed = speed;
     this.col = [250,230,150];
 
-    this.tegn = function() {
+    this.Tegn = function() {
         fill(this.col);
         rect(this.x, this.y, this.bred, this.dyb);
     }
 
-    this.move = function(dir) { /*Denne funktion gør det muligt at flytte turbanen smoothly
+    this.Move = function(dir) { /*Denne funktion gør det muligt at flytte turbanen smoothly
                                 i stedet for at man skal trykke på knapperne hver gang man vil rykke den en lille smule*/
         if (dir == "up") {
             this.y -= this.speed;
@@ -49,7 +49,7 @@ function Kurv(x, y, bredde, dybde, speed) {
         }
     }
 
-    this.grebet = function(xa, ya, ra) {
+    this.Grebet = function(xa, ya, ra) {
         let tolerence = 15;
         if ((ya < this.y+tolerence && ya > this.y-tolerence) && xa > this.x+ra && xa < this.x+this.bred-ra) {
             return true;

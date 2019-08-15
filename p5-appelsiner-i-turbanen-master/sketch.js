@@ -51,35 +51,45 @@ function StartLoop() {
 
 function GameLoop() {
     background(0);
-    move();
-    checkScore();
-    display();
+    Move();
+    CheckScore();
+    Update();
 }
 
-var hasShowedMessage = false;
+var hasShowedMessageOne = false;
+var hasShowedMessageTwo = false;
+var countdownUntilRestart = 60;
 function EndLoop() {
-    if (!hasShowedMessage) {
+    if (!hasShowedMessageOne) {
         fill(255);
         textAlign(CENTER);
         textSize(35);
         text("Game Over", width / 2, height / 2);
+        hasShowedMessageOne = true;
+    }
+    if (!hasShowedMessageTwo && countdownUntilRestart <= 0) {
         textSize(20);
         text("Press any key to try again", width / 2, height / 2 + 25);
-        hasShowedMessage = true;
+        hasShowedMessageTwo = true;
+    }
+
+    if (countdownUntilRestart >= 0) {
+        countdownUntilRestart -= 1;
     }
 }
 
-function display() {
+function Update() {
+
     // Her vises turbanen - foreløbig blot en firkant
-    turban.tegn();
+    turban.Tegn();
 
     //Her skal vi sørge for at appelsinen bliver vist, hvis den skal vises
     for (let i = 0; i < appelsiner.length; i++) {
-        appelsiner[i].update();
+        appelsiner[i].Update();
     }
 
     if (tidTæller <= 0) {
-        shootNew();
+        ShootNew();
         tidTæller = 40 + tid + Math.random() * tid;
     }
     tidTæller -= 1;
@@ -92,23 +102,23 @@ function display() {
     text("Missed: " + missed, 10, 80);
 }
 
-function move() {
+function Move() {
 
     if (goingRight) {
-        turban.move("right");
+        turban.Move("right");
     }
     if (goingLeft) {
-        turban.move("left");
+        turban.Move("left");
     }
     if (goingUp) {
-        turban.move("up");
+        turban.Move("up");
     }
     if (goingDown) {
-        turban.move("down");
+        turban.Move("down");
     }
 }
 
-function checkScore() {
+function CheckScore() {
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].x > width || appelsiner[i].y > height) {
             appelsiner.splice(i, 1);
@@ -118,7 +128,7 @@ function checkScore() {
 
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].yspeed > 0) {
-            if (turban.grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
+            if (turban.Grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
                 score += 1;
                 appelsiner.splice(i, 1);
             }
@@ -130,7 +140,7 @@ function checkScore() {
     }
 }
 
-function shootNew() {
+function ShootNew() {
     appelsiner.push(new Appelsin());
 
     tid *= 0.98;

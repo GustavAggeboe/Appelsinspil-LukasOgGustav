@@ -11,7 +11,7 @@ class Appelsin {
         this.col = [200,100,0];
     }
 
-    update() {
+    Update() {
         // Set appelsinens placering
         this.x += this.xspeed;
         this.y += this.yspeed;
