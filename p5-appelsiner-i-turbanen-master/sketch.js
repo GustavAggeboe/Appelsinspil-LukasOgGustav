@@ -101,7 +101,7 @@ function Update() {
     fill(255);
     text("Score: " + score, 10, 40);
     fill(255);
-    text("Missed: " + missed, 10, 80);
+    text("Missed: " + missed + " / 10", 10, 80);
 }
 
 function Move() {
@@ -137,7 +137,7 @@ function CheckScore() {
         }
     }
 
-    if (missed >= 1) {
+    if (missed >= 10) {
         state = "end";
     }
 }
