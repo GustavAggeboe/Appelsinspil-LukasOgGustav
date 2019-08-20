@@ -26,7 +26,7 @@ let welcomeMessage;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    turban = new Kurv(width / 2, height / 2, 90, 30, 10);
+    turban = new Kurv(width / 2, height / 2, 90, 70, 10);
 
     //welcomeMessage = createElement('h1', 'Welcome to our game');
     //document.getElementById("welcome").appendChild(welcomeMessage);
@@ -87,14 +87,13 @@ function EndLoop() {
 }
 
 function Update() {
-
-    // Her vises turbanen - foreløbig blot en firkant
-    turban.Tegn();
-
     //Her skal vi sørge for at appelsinen bliver vist, hvis den skal vises
     for (let i = 0; i < appelsiner.length; i++) {
         appelsiner[i].Update();
     }
+    
+    // Her vises turbanen - foreløbig blot en firkant
+    turban.Tegn();
 
     if (tidTæller <= 0) {
         ShootNew();

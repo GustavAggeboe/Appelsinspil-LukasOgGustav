@@ -1,7 +1,8 @@
 
 class Appelsin {
     constructor() {
-        this.rad = 20;
+        this.image = loadImage("/p5-appelsiner-i-turbanen-master/art/orange.png");
+        this.rad = 40;
         this.x = this.rad;
         this.spawnMin = 200;
         this.y = this.spawnMin + Math.random() * (height - this.spawnMin);
@@ -24,7 +25,8 @@ class Appelsin {
             let bounceSpeed = 10;
             this.yspeed += bounceSpeed;
         }
-        fill(this.col);
-        ellipse(this.x, this.y, this.rad * 2, this.rad * 2);
+        //fill(this.col);
+        //ellipse(this.x, this.y, this.rad * 2, this.rad * 2);
+        image(this.image, this.x, this.y, this.rad, this.rad);
     }
 }
