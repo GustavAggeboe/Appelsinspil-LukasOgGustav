@@ -53,8 +53,24 @@
 
 .tryAgain {
     color: white;
-    background-color: #1E1E1E;
-    border: 0px;
+    background: none;
+    border: 2px solid white;
+    text-align: center;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 55%;
+    z-index: 10;
+    width: 400px;
+
+    font-size: 40px;
+}
+
+.startButton {
+    color: white;
+    background: none;
+    border: 2px solid white;
     text-align: center;
     margin: auto;
     position: absolute;

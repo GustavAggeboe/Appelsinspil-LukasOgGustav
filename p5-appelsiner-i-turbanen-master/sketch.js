@@ -91,7 +91,7 @@ function Update() {
     for (let i = 0; i < appelsiner.length; i++) {
         appelsiner[i].Update();
     }
-    
+
     // Her vises turbanen - foreløbig blot en firkant
     turban.Tegn();
 
@@ -161,11 +161,8 @@ function keyPressed() {
     if (key == "s" || key == "S") {
         goingDown = true;
     }
-
-    if (state == "start") {
-        state = "game";
-    }
 }
+
 function keyReleased() {
     if (key == "d" || key == "D") {
         goingRight = false;
@@ -187,6 +184,10 @@ function TryAgain(){
     score = 0;
     countdownUntilRestart = 60;
     state = "start";
+}
+
+function StartGame() {
+    state = "game";
 }
 
 /*
