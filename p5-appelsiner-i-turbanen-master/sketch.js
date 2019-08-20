@@ -22,17 +22,17 @@ let tidTæller = 40 + tid + Math.random() * tid;
 
 let state = "start";
 
-let welcomeMessage;
+//let welcomeMessage;
 
 function setup() {
     createCanvas(1365, 700);
     turban = new Kurv(width / 2, height / 2, 90, 30, 10);
 
-    welcomeMessage = createA('h1', 'Welcome to our game');
-    welcomeMessage.position(width / 2, height / 2);
-    let col = color(255, 255, 255);
-    welcomeMessage.style('color', col);
-    welcomeMessage.class('welcome-message');
+    //welcomeMessage = createA('h1', 'Welcome to our game');
+    //welcomeMessage.position(width / 2, height / 2);
+    //let col = color(255, 255, 255);
+    //welcomeMessage.style('color', col);
+    //welcomeMessage.class('welcome-message');
 }
 
 function draw() {
@@ -54,7 +54,7 @@ function StartLoop() {
     fill(255);
     textAlign(CENTER);
     textSize(72);
-    //text("Welcome to our game", width / 2, height / 4);
+    text("Welcome to our game", width / 2, height / 4);
     textSize(35);
     text("Press any key to start!", width / 2, height / 2);
 }
