@@ -100,12 +100,12 @@ function Update() {
         tidTæller = 40 + tid + Math.random() * tid;
     }
     tidTæller -= 1;
-
+    //Den finder den div med Id'en scoring.         Hviser ens score og hvor mange man har misset
     document.getElementById("scoring").innerHTML = `Score: ${score}<br/>Missed: ${missed}/10`;
 }
 
 function Move() {
-
+//Gør at turbanen bevæger sig mens knappen er holdt nede
     if (goingRight) {
         turban.Move("right");
     }
@@ -121,6 +121,8 @@ function Move() {
 }
 
 function CheckScore() {
+    /*Den løber alle appelsinerne igennem og hvis der er nogle der ryger ud af banen i stedet for ned i turbanen,
+    så tilføjer den et point til ens missed counter*/
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].x > width || appelsiner[i].y > height) {
             appelsiner.splice(i, 1);
@@ -128,6 +130,8 @@ function CheckScore() {
         }
     }
 
+    /*Den løber igennem alle appelsinerne og hvis den ser at der er en appelsin der ryger ned i turbanen
+    så plusser den 1 point til ens score*/
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].yspeed > 0) {
             if (turban.Grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
@@ -143,12 +147,14 @@ function CheckScore() {
 }
 
 function ShootNew() {
+    //Laver/skyder en ny appelsin af sted og ganger derefter tid med 0.98 sådan at det tager mindre tid mellem hver appelsin
     appelsiner.push(new Appelsin());
 
     tid *= 0.98;
 }
 
 function keyPressed() {
+    //Sætter de forskellige statements til at være true når der bliver trykket på knapperne
     if (key == "d" || key == "D") {
         goingRight = true;
     }
@@ -162,11 +168,13 @@ function keyPressed() {
         goingDown = true;
     }
 
+    //Gør at spillet starter når det har "staten" 'start'
     if (state == "start") {
         state = "game";
     }
 }
 function keyReleased() {
+    //Sætter de forskellige statements til at være false når man slipper knapperne igen
     if (key == "d" || key == "D") {
         goingRight = false;
     }
