@@ -25,7 +25,7 @@ let state = "start";
 let welcomeMessage;
 
 function setup() {
-    createCanvas(1365, 700);
+    createCanvas(windowWidth, windowHeight);
     turban = new Kurv(width / 2, height / 2, 90, 30, 10);
 
     //welcomeMessage = createElement('h1', 'Welcome to our game');
@@ -51,39 +51,34 @@ function draw() {
 }
 
 function StartLoop() {
-    background(0);
+    background(30);
     fill(255);
     textAlign(CENTER);
     textSize(72);
     //text("Welcome to our game", width / 2, height / 4);
+    document.getElementById('tryAgain').hidden = true;
+    document.getElementById('scoring').hidden = true;
     document.getElementById('welcome').hidden = false;
-    textSize(35);
-    text("Press any key to start!", width / 2, height / 2);
+    document.getElementById('end').hidden = true;
 }
 
 function GameLoop() {
-    background(0);
+    background(30);
     Move();
     CheckScore();
     Update();
     document.getElementById('welcome').hidden = true;
+    document.getElementById('scoring').hidden = false;
 }
 
-var hasShowedMessageOne = false;
-var hasShowedMessageTwo = false;
-var countdownUntilRestart = 60;
+let countdownUntilRestart = 60;
+
 function EndLoop() {
-    if (!hasShowedMessageOne) {
-        fill(255);
-        textAlign(CENTER);
-        textSize(140);
-        text("Game Over", width / 2, height / 2);
-        hasShowedMessageOne = true;
-    }
-    if (!hasShowedMessageTwo && countdownUntilRestart <= 0) {
-        textSize(35);
-        text("Press any key to try again", width / 2, height / 2 + 55);
-        hasShowedMessageTwo = true;
+    document.getElementById('scoring').hidden = true;
+    document.getElementById('end').hidden = false;
+    
+    if (countdownUntilRestart <= 0) {
+        document.getElementById('tryAgain').hidden = false;
     }
 
     if (countdownUntilRestart >= 0) {
@@ -107,12 +102,7 @@ function Update() {
     }
     tidTæller -= 1;
 
-
-    textAlign(LEFT);
-    fill(255);
-    text("Score: " + score, 10, 40);
-    fill(255);
-    text("Missed: " + missed + " / 10", 10, 80);
+    document.getElementById("scoring").innerHTML = `Score: ${score}<br/>Missed: ${missed}/10`;
 }
 
 function Move() {
@@ -176,16 +166,6 @@ function keyPressed() {
     if (state == "start") {
         state = "game";
     }
-
-    if (state == "end" && hasShowedMessageTwo) {
-        // restart game
-        missed = 0;
-        score = 0;
-        hasShowedMessageOne = false;
-        hasShowedMessageTwo = false;
-        countdownUntilRestart = 60;
-        state = "start";
-    }
 }
 function keyReleased() {
     if (key == "d" || key == "D") {
@@ -202,8 +182,12 @@ function keyReleased() {
     }
 }
 
-function mousePressed(){
-
+function TryAgain(){
+    // restart game
+    missed = 0;
+    score = 0;
+    countdownUntilRestart = 60;
+    state = "start";
 }
 
 /*

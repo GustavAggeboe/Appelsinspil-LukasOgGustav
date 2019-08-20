@@ -20,7 +20,6 @@
       }
       canvas {
         padding: 0;
-        margin: auto;
         display: block;
         position: absolute;
         top: 0;
@@ -28,18 +27,22 @@
         left: 0;
         right: 0;
       }
-      .welcome-message {
-        color: #FFF;
-        padding: 24pt;
-      }
     </style>
-
-    <div id = "welcome">
-      <h1 class = "welcome-msg">welcome to our game!</h1>
-    </div>
   </head>
   <body>
-    
+    <div id = "welcome">
+        <p class = "welcome-msg">Welcome to our game!</p>
+        <p class = "welcome-msg2">Press any key to start</p>
+    </div>
+
+    <div id = "scoring" class = "scoring">
+    </div>
+
+    <div id = "end">
+        <p class = "gameOver">Game Over</p>
+        <button class = "tryAgain" id = "tryAgain" onclick="TryAgain()">Press here to try again</button>
+    </div>
+
   </body>
 
 </html>
