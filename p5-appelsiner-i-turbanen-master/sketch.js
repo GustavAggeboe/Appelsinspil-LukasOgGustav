@@ -95,7 +95,7 @@ function Update() {
     for (let i = 0; i < appelsiner.length; i++) {
         appelsiner[i].Update();
     }
-    
+
     // Her vises turbanen - foreløbig blot en firkant
     turban.Tegn();
 
@@ -171,12 +171,8 @@ function keyPressed() {
     if (key == "s" || key == "S") {
         goingDown = true;
     }
-
-    //Gør at spillet starter når det har "staten" 'start'
-    if (state == "start") {
-        state = "game";
-    }
 }
+
 function keyReleased() {
     //Sætter de forskellige statements til at være false når man slipper knapperne igen
     if (key == "d" || key == "D") {
@@ -199,6 +195,10 @@ function TryAgain(){
     score = 0;
     countdownUntilRestart = 60;
     state = "start";
+}
+
+function StartGame() {
+    state = "game";
 }
 
 /*

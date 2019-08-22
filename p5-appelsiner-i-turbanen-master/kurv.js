@@ -10,6 +10,7 @@ function Kurv(x, y, bredde, dybde, speed) {
      */
     
     this.image = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
+    this.kidImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
     this.bred = bredde;
     this.dyb = dybde;
     this.x = width / 2 - bredde / 2;
@@ -20,7 +21,9 @@ function Kurv(x, y, bredde, dybde, speed) {
     this.Tegn = function() {
         /* fill(this.col);
         rect(this.x, this.y, this.bred, this.dyb); */
+        image(this.kidImage, this.x - 65, this.y - 10, 220, 220);
         image(this.image, this.x, this.y, this.bred, this.dyb);
+        
     }
 
     this.Move = function(dir) { /*Denne funktion gør det muligt at flytte turbanen smoothly
