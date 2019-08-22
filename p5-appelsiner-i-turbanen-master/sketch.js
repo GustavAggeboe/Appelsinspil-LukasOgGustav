@@ -11,6 +11,7 @@ let goingDown;
 
 // Objekter
 let turban;
+let otherTurban;
 let appelsiner = [];
 
 // Øvrige
@@ -22,7 +23,7 @@ let tidTæller = 40 + tid + Math.random() * tid;
 
 let state = "start";
 let role = "none";
-let readyToStart  = false;
+let readyToStart = false;
 let startDate;
 let startCountdown = 3000;
 let realStartCountdown = 2000;
@@ -35,7 +36,8 @@ function setup() {
     //Her laver vi vores canvas med størrelserne 'windowWidth' og 'windowHeight' for at få det til at fylde hele browseren
     createCanvas(1000, 562.5);
     //Her laver vi vores turban
-    turban = new Kurv(width / 2, height / 2, 90, 70, 10);
+    turban = new Player(width / 2, height / 2, 90, 70, 10);
+    otherTurban = new OtherPlayer();
 
     //welcomeMessage = createElement('h1', 'Welcome to our game');
     //document.getElementById("welcome").appendChild(welcomeMessage);
@@ -46,7 +48,7 @@ function setup() {
 }
 
 function draw() {
-    switch(state) {
+    switch (state) {
         case "start":
             StartLoop();
             break;
@@ -76,7 +78,7 @@ function StartLoop() {
     document.getElementById('end').hidden = true;
     document.getElementById('lobbyDiv').hidden = true;
     document.getElementById('readyToStart').hidden = true;
-    
+
 }
 
 function LobbyLoop() {
@@ -98,11 +100,7 @@ function LobbyLoop() {
         let startingIn = startCountdown - timePassed;
         if (startingIn < 0) {
             document.getElementById("countdown").innerHTML = `Starting...`;
-            let timePassed2 = now - startDate;
-            let startingIn2 = realStartCountdown - timePassed2;
-            if (startingIn2 < 0) { 
-                state = "game";
-            }
+            state = "game";
         } else {
             // Show countdown
             document.getElementById("countdown").innerHTML = `Starting in ${int(startingIn/1000)}`;
@@ -122,42 +120,56 @@ function GameLoop() {
     document.getElementById('lobbyDiv').hidden = true;
     document.getElementById('readyToStart').hidden = true;
 
+    // Send min lokation til den anden spiller
+    let posMsg = {
+        type: 'playerPos',
+        x: turban.x,
+        y: turban.y
+    };
+    socket.sendMessage(posMsg);
 }
 
 let countdownUntilRestart = 60;
 
 function EndLoop() {
-    document.getElementById('end').hidden = false;
-    
-    if (countdownUntilRestart <= 0) {
-        document.getElementById('tryAgain').hidden = false;
-    }
+    if (role == "host") {
+        document.getElementById('end').hidden = false;
 
-    if (countdownUntilRestart >= 0) {
-        countdownUntilRestart -= 1;
+        if (countdownUntilRestart <= 0) {
+            document.getElementById('tryAgain').hidden = false;
+        }
+
+        if (countdownUntilRestart >= 0) {
+            countdownUntilRestart -= 1;
+        }
     }
 }
 
 function Update() {
+
     //Her skal vi sørge for at appelsinen bliver vist, hvis den skal vises
     for (let i = 0; i < appelsiner.length; i++) {
         appelsiner[i].Update();
     }
 
-    // Her vises turbanen - foreløbig blot en firkant
+    // Her vises turbanerne
     turban.Tegn();
+    otherTurban.Tegn();
 
-    if (tidTæller <= 0) {
-        ShootNew();
-        tidTæller = 40 + tid + Math.random() * tid;
+    if (role == "host") {
+        if (tidTæller <= 0) {
+            ShootNew();
+            tidTæller = 40 + tid + Math.random() * tid;
+        }
+        tidTæller -= 1;
     }
-    tidTæller -= 1;
-    //Den finder den div med Id'en scoring.         Hviser ens score og hvor mange man har misset
+
+    //Den finder den div med Id'et 'scoring'.      Viser ens score og hvor mange man har misset
     document.getElementById("scoring").innerHTML = `Score: ${score}<br/>Missed: ${missed}/10`;
 }
 
 function Move() {
-//Gør at turbanen bevæger sig mens knappen er holdt nede
+    //Gør at turbanen bevæger sig, hvis en eller flere knapper bliver holdt nede
     if (goingRight) {
         turban.Move("right");
     }
@@ -173,12 +185,15 @@ function Move() {
 }
 
 function CheckScore() {
+
     /*Den løber alle appelsinerne igennem og hvis der er nogle der ryger ud af banen i stedet for ned i turbanen,
     så tilføjer den et point til ens missed counter*/
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].x > width || appelsiner[i].y > height) {
             appelsiner.splice(i, 1);
-            missed += 1;
+            if (role == "host") {
+                missed += 1;
+            }
         }
     }
 
@@ -187,22 +202,55 @@ function CheckScore() {
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].yspeed > 0) {
             if (turban.Grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
-                score += 1;
+                if (role == "host") {
+                    score++;
+                } else if (role == "player") {
+                    let scoreMsg = {
+                        type: 'add to score',
+                        appelsinID: appelsiner[i].id
+                    }
+                    socket.sendMessage(scoreMsg);
+                }
                 appelsiner.splice(i, 1);
             }
         }
     }
 
-    if (missed >= 10) {
-        state = "end";
+    if (role == "host") {
+        if (missed >= 10) {
+            state = "end";
+        }
+
+        let scoreMsg = {
+            type: 'share scoring',
+            theScore: score,
+            theMissed: missed
+        };
+        socket.sendMessage(scoreMsg);
+        console.log("sending score");
     }
 }
 
 function ShootNew() {
-    //Laver/skyder en ny appelsin af sted og ganger derefter tid med 0.98 sådan at det tager mindre tid mellem hver appelsin
-    appelsiner.push(new Appelsin());
-
-    tid *= 0.98;
+    if (role == "host") {
+        //Laver/skyder en ny appelsin af sted og ganger derefter tid med 0.98 sådan at det tager mindre tid mellem hver appelsin
+        let nyAppelsin = new Appelsin();
+        // Send appelsinen til den anden spiller
+        let orangeMsg = {
+            type: 'send orange',
+            xPos: nyAppelsin.x,
+            yPos: nyAppelsin.y,
+            xSpeed: nyAppelsin.xspeed,
+            ySpeed: nyAppelsin.yspeed,
+            radius: nyAppelsin.rad,
+            ID: nyAppelsin.id
+        };
+        socket.sendMessage(orangeMsg);
+        appelsiner.push(nyAppelsin);
+        
+        // Gør intervallet mindre mellem hver appelsin der bliver skudt afsted
+        tid *= 0.98;
+    }
 }
 
 function keyPressed() {
@@ -237,16 +285,12 @@ function keyReleased() {
     }
 }
 
-function TryAgain(){
+function TryAgain() {
     // restart game
     missed = 0;
     score = 0;
     countdownUntilRestart = 60;
     state = "start";
-}
-
-function StartGame() {
-    state = "game";
 }
 
 function CreateLobby() {
@@ -265,79 +309,65 @@ function ConnectToLobby() {
     socket.onMessage(handleMessage);
 
     role = "player";
-    socket.sendMessage('connected');
+    let msg = {
+        type: 'connected'
+    };
+    socket.sendMessage(msg);
 
 }
 
-function handleMessage(msg) {
-    switch (msg) {
+function handleMessage(sendedObject) {
+    switch (sendedObject.type) {
+
         case 'connected':
             if (role == "host") {
-                socket.sendMessage('ready');
+                let msg = {
+                    type: 'ready'
+                };
+                socket.sendMessage(msg);
                 readyToStart = true;
                 startDate = new Date();
-            } 
-        break;
+            }
+            break;
+
         case 'ready':
             if (role == "player") {
                 readyToStart = true;
                 state = "lobby";
                 startDate = new Date();
-            } 
-        break;
+            }
+            break;
+
+        case 'playerPos':
+            otherTurban.UpdatePos(sendedObject.x, sendedObject.y);
+            break;
+
+        case 'send orange':
+            if (role == "player") {
+                let nyAppelsin = new Appelsin();
+                nyAppelsin.NewValues(sendedObject.xPos, sendedObject.yPos, sendedObject.xSpeed, sendedObject.ySpeed, sendedObject.radius, sendedObject.ID);
+                appelsiner.push(nyAppelsin);
+            }
+            break;
+            
+        case 'add to score':
+            if (role == "host") {
+                // Tilføj til scoren
+                score++;
+                // Slet den korrekte appelsin
+                for (let i = appelsiner.length - 1; i >= 0; i--) {
+                    if (appelsiner[i].id == appelsinID) {
+                        appelsiner.splice(i, 1);
+                    }
+                }
+            }
+            break;
+
+        case 'share scoring':
+            if (role == "player") {
+                score = sendedObject.theScore;
+                missed = sendedObject.theMissed;
+            }
+            break;
     }
 }
-
-/*
-OPGAVER
-
- Opgave 1 - undersøg hvad variablerne  grav  og  tid  bruges til.
-            Skriv det i kommentarer, prøv at se hvad der sker, når
-            I laver dem om.
-
- Opgave 2 - lav programmet om så det er tilfældigt hvor højt oppe 
-            på venstre kan appelsinerne starter. Overvej om man kan 
-            sikre, at appelsinen ikke ryger ud af skærmens top men 
-            stadig har en "pæn" bane
-
- Opgave 3 - lav programmet om så man også kan bevæge turbanen mod
-            højre og venstre med A- og D-tasterne. Prøv jer frem med
-            forskellige løsninger for hvor hurtigt turbanen skal rykke
-
- Opgave 4 - ret programmet til, så det også angives hvor mange 
-            appelsiner man IKKE greb med turbanen
-
- Opgave 5 - Undersøg hvad scriptet  kurv.js  er og gør, samt hvad de 
-            funktioner, scriptet indeholder, skal bruges til. Skriv 
-            det som kommentarer oven over hver funktion. Forklar tillige,
-            hvad sammenhængen mellem dette script og turbanen i hoved-
-            programmet er, og forklar det med kommentarer i toppen af 
-            kurv.js
-
- Opgave 6 - find et billede af en turban og sæt det ind i stedet 
-            for firkanten. Find eventuelt også en lyd, der kan afspilles, 
-            når appelsinen gribes. Se gerne i "p5 Reference" hvordan, 
-            hvis ikke I kan huske det:   https://p5js.org/reference/
-            Lav programmet om, så man kan flytte turbanen med musen
-
- Opgave 7 - lav en Appelsin-klasse, lige som der er en Kurv-klasse. 
-            Flyt koden til appelsinen ud i et selvstændigt script.
-            Overvej hvad det skal hedde, oghvilke variabler og funktioner, 
-            der skal lægges over i det nye script, herunder hvordan det 
-            kommer til at berøre turbanen. Skriv jeres overvejelser i 
-            kommentarerne
-
- Opgave 8 - ret programmet til, så der kan være flere appelsiner i 
-            luften på en gang, dvs. at der kan skydes en ny appelsin
-            afsted før den foregående er forsvundet. Overvej hvordan 
-            og hvor hurtigt de skal skydes af, og forklar jeres tanker
-            i kommentarerne
-
- Opgave 9 - ret programmet til, så det kan vindes og/eller tabes ved
-            at man griber eller misser et antal appelsiner. Sørg for 
-            at der vises en "Game Over"-skærm, som fortæller om man 
-            vandt eller tabte, og som giver mulighed for at starte et
-            nyt spil.
-
-*/
-

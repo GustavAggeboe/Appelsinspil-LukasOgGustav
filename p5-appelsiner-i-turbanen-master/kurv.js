@@ -2,14 +2,10 @@
  * Dette script definerer klassen Kurv
 */
 
-function Kurv(x, y, bredde, dybde, speed) {
-    /* Den første del af funktionen er en "konstruktør".
-     * Den tager parametrene og konstruerer et nyt objekt 
-     * ud fra dem. Værdierne huskes som hørende til netop 
-     * dette objekt ved hjælp af nøgleordet this
-     */
+function Player(x, y, bredde, dybde, speed) {
+    this.type = "player";
     
-    this.image = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
+    this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
     this.kidImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
     this.bred = bredde;
     this.dyb = dybde;
@@ -22,7 +18,7 @@ function Kurv(x, y, bredde, dybde, speed) {
         /* fill(this.col);
         rect(this.x, this.y, this.bred, this.dyb); */
         image(this.kidImage, this.x - 65, this.y - 10, 220, 220);
-        image(this.image, this.x, this.y, this.bred, this.dyb);
+        image(this.turbanImage, this.x, this.y, this.bred, this.dyb);
         
     }
 
@@ -66,4 +62,34 @@ function Kurv(x, y, bredde, dybde, speed) {
         }
     }
 
+}
+
+
+function OtherPlayer() {
+
+    this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
+    this.guyImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
+    this.girlImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
+    this.bred = 90;
+    this.dyb = 70;
+    this.x = width / 2;
+    this.y = height / 1.3;
+
+    this.Tegn = function() {
+        if (role == "host") {
+            // Hvis jeg er host, så skal den anden være:
+            image(this.girlImage, this.x - 65, this.y - 10, 220, 220);
+            image(this.turbanImage, this.x, this.y, this.bred, this.dyb);
+        }
+        if (role == "player") {
+            // Hvis jeg er den anden spiller, så skal den anden være:
+            image(this.guyImage, this.x - 65, this.y - 10, 220, 220);
+            image(this.turbanImage, this.x, this.y, this.bred, this.dyb);
+        }
+    }
+
+    this.UpdatePos = function(xPos, yPos) {
+        this.x = xPos;
+        this.y = yPos;
+    }
 }
