@@ -55,8 +55,10 @@ function Kurv(x, y, bredde, dybde, speed) {
     }
 
     this.Grebet = function(xa, ya, ra) {
-        let tolerence = 15;
-        if ((ya < this.y+tolerence && ya > this.y-tolerence) && xa > this.x+ra && xa < this.x+this.bred-ra) {
+        let yTolerence = 15;
+        let yOffset = 10;
+        let xTolerence = 10;
+        if ((ya < this.y + yTolerence + yOffset && ya > this.y - yTolerence + yOffset) && xa > this.x - xTolerence && xa < this.x + this.bred - ra + xTolerence) {
             return true;
         }
         else {

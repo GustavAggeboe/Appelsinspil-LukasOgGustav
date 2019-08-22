@@ -21,12 +21,19 @@ let tid = 100;
 let tidTæller = 40 + tid + Math.random() * tid;
 
 let state = "start";
+let role = "none";
+let readyToStart  = false;
+let startDate;
+let startCountdown = 3000;
+let realStartCountdown = 2000;
 
 let welcomeMessage;
 
+let socket;
+
 function setup() {
     //Her laver vi vores canvas med størrelserne 'windowWidth' og 'windowHeight' for at få det til at fylde hele browseren
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(1000, 562.5);
     //Her laver vi vores turban
     turban = new Kurv(width / 2, height / 2, 90, 70, 10);
 
@@ -42,6 +49,9 @@ function draw() {
     switch(state) {
         case "start":
             StartLoop();
+            break;
+        case "lobby":
+            LobbyLoop();
             break;
         case "game":
             GameLoop();
@@ -64,6 +74,40 @@ function StartLoop() {
     document.getElementById('scoring').hidden = true;
     document.getElementById('welcome').hidden = false;
     document.getElementById('end').hidden = true;
+    document.getElementById('lobbyDiv').hidden = true;
+    document.getElementById('readyToStart').hidden = true;
+    
+}
+
+function LobbyLoop() {
+    //I StartLoop skal vi kun vise vores 'welcome' div
+    background(30);
+    fill(255);
+    textAlign(CENTER);
+    textSize(72);
+    //text("Welcome to our game", width / 2, height / 4);
+    //Tager nogle elementer fra vores html og ser på hvilke af dem der skal vises og hvilke der skal skjules, ud fra hvilken state spillet er i
+    document.getElementById('welcome').hidden = true;
+    document.getElementById('lobbyDiv').hidden = false;
+
+    if (readyToStart) {
+        document.getElementById('readyToStart').hidden = false;
+        // Tæl ned
+        let now = new Date();
+        let timePassed = now - startDate;
+        let startingIn = startCountdown - timePassed;
+        if (startingIn < 0) {
+            document.getElementById("countdown").innerHTML = `Starting...`;
+            let timePassed2 = now - startDate;
+            let startingIn2 = realStartCountdown - timePassed2;
+            if (startingIn2 < 0) { 
+                state = "game";
+            }
+        } else {
+            // Show countdown
+            document.getElementById("countdown").innerHTML = `Starting in ${int(startingIn/1000)}`;
+        }
+    }
 }
 
 function GameLoop() {
@@ -71,14 +115,18 @@ function GameLoop() {
     Move();
     CheckScore();
     Update();
-    document.getElementById('welcome').hidden = true;
+    document.getElementById('tryAgain').hidden = true;
     document.getElementById('scoring').hidden = false;
+    document.getElementById('welcome').hidden = true;
+    document.getElementById('end').hidden = true;
+    document.getElementById('lobbyDiv').hidden = true;
+    document.getElementById('readyToStart').hidden = true;
+
 }
 
 let countdownUntilRestart = 60;
 
 function EndLoop() {
-    document.getElementById('scoring').hidden = true;
     document.getElementById('end').hidden = false;
     
     if (countdownUntilRestart <= 0) {
@@ -199,6 +247,45 @@ function TryAgain(){
 
 function StartGame() {
     state = "game";
+}
+
+function CreateLobby() {
+    socket = ElineSocket.create();
+    socket.onMessage(handleMessage);
+    role = "host";
+    document.getElementById("gameId").innerHTML = `ID: ${socket.id}`;
+
+    state = "lobby";
+}
+
+function ConnectToLobby() {
+    const pin = prompt("Pin: ");
+    socket = ElineSocket.connect(pin);
+    console.log("entered " + pin);
+    socket.onMessage(handleMessage);
+
+    role = "player";
+    socket.sendMessage('connected');
+
+}
+
+function handleMessage(msg) {
+    switch (msg) {
+        case 'connected':
+            if (role == "host") {
+                socket.sendMessage('ready');
+                readyToStart = true;
+                startDate = new Date();
+            } 
+        break;
+        case 'ready':
+            if (role == "player") {
+                readyToStart = true;
+                state = "lobby";
+                startDate = new Date();
+            } 
+        break;
+    }
 }
 
 /*

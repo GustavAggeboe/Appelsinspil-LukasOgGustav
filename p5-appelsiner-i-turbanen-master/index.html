@@ -12,6 +12,9 @@
     <script src="appelsin.js" type="text/javascript"></script>
     <script src="kurv.js" type="text/javascript"></script>
 
+    <script src="eline-sockets.js" type='text/javascript'></script>
+    <!-- <script src="connection.js" type="text/javascript"></script> -->
+
     <link rel="stylesheet" type="text/css" href="style.css">
 
     <style>
@@ -20,6 +23,7 @@
       }
       canvas {
         padding: 0;
+        margin: auto;
         display: block;
         position: absolute;
         top: 0;
@@ -30,13 +34,24 @@
     </style>
   </head>
   <body>
+
     <div id = "welcome">
-        <p class = "welcome-msg">Welcome to our game!</p>
-        <button class = "startButton" id = "startButton" onclick="StartGame()">Press here to start</button>
+      <p class = "welcome-msg">Welcome to our game!</p>
+      <!-- <button class = "startButton" id = "startButton" onclick="StartGame()">Press here to start</button> -->
+      <button class = "createBtn" id = "createBtn" onclick="CreateLobby()">Create</button>
+      <button class = "connectBtn" id = "connectBtn" onclick="ConnectToLobby()">Connect</button>
     </div>
 
-    <div id = "scoring" class = "scoring">
-    </div>
+    <div id = "lobbyDiv">
+        <p class = "lobby-msg">Waiting for another player...</p>
+        <p id = "gameId" class = "scoring">ID: unknown</p>
+        <div id = "readyToStart" class = "welcome-msg2">Another player has connected!
+          <p class = "countdown" id = "countdown">Starting in 3</p>
+        </div>
+        
+      </div>
+
+    <div id = "scoring" class = "scoring"></div>
 
     <div id = "end">
         <p class = "gameOver">Game Over</p>
@@ -44,5 +59,4 @@
     </div>
 
   </body>
-
 </html>
