@@ -25,7 +25,9 @@ let state = "start";
 let welcomeMessage;
 
 function setup() {
+    //Her laver vi vores canvas med størrelserne 'windowWidth' og 'windowHeight' for at få det til at fylde hele browseren
     createCanvas(windowWidth, windowHeight);
+    //Her laver vi vores turban
     turban = new Kurv(width / 2, height / 2, 90, 70, 10);
 
     //welcomeMessage = createElement('h1', 'Welcome to our game');
@@ -51,11 +53,13 @@ function draw() {
 }
 
 function StartLoop() {
+    //I StartLoop skal vi kun vise vores 'welcome' div
     background(30);
     fill(255);
     textAlign(CENTER);
     textSize(72);
     //text("Welcome to our game", width / 2, height / 4);
+    //Tager nogle elementer fra vores html og ser på hvilke af dem der skal vises og hvilke der skal skjules, ud fra hvilken state spillet er i
     document.getElementById('tryAgain').hidden = true;
     document.getElementById('scoring').hidden = true;
     document.getElementById('welcome').hidden = false;
