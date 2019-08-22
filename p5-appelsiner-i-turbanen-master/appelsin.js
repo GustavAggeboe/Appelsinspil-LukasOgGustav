@@ -1,6 +1,7 @@
 
 class Appelsin {
     constructor() {
+        //Giver vores appelsiner et billede
         this.image = loadImage("/p5-appelsiner-i-turbanen-master/art/orange.png");
         this.rad = 40;
         this.x = this.rad;
