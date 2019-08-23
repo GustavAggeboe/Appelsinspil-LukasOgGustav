@@ -38,6 +38,7 @@ function setup() {
     //Her laver vi vores turban
     turban = new Player(width / 2, height / 2, 90, 70, 10);
     otherTurban = new OtherPlayer();
+    
 
     //welcomeMessage = createElement('h1', 'Welcome to our game');
     //document.getElementById("welcome").appendChild(welcomeMessage);
@@ -78,7 +79,6 @@ function StartLoop() {
     document.getElementById('end').hidden = true;
     document.getElementById('lobbyDiv').hidden = true;
     document.getElementById('readyToStart').hidden = true;
-
 }
 
 function LobbyLoop() {
@@ -303,6 +303,9 @@ function TryAgain() {
     role = null;
     readyToStart = false;
     startCountdown = 3000;
+    tid = 100;
+    tidTæller = 40 + tid + Math.random() * tid;
+    appelsiner = [];
 
     state = "start";
 }
@@ -312,6 +315,7 @@ function CreateLobby() {
     socket.onMessage(handleMessage);
     role = "host";
     document.getElementById("gameId").innerHTML = `ID: ${socket.id}`;
+    console.log(socket.id);
 
     state = "lobby";
 }
