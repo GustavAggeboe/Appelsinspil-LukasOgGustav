@@ -301,6 +301,8 @@ function TryAgain() {
 
     socket = null;
     role = null;
+    readyToStart = false;
+    startCountdown = 3000;
 
     state = "start";
 }
