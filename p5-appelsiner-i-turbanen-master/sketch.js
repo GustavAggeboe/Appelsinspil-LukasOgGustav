@@ -132,16 +132,14 @@ function GameLoop() {
 let countdownUntilRestart = 60;
 
 function EndLoop() {
-    if (role == "host") {
-        document.getElementById('end').hidden = false;
+    document.getElementById('end').hidden = false;
 
-        if (countdownUntilRestart <= 0) {
-            document.getElementById('tryAgain').hidden = false;
-        }
+    if (countdownUntilRestart <= 0) {
+        document.getElementById('tryAgain').hidden = false;
+    }
 
-        if (countdownUntilRestart >= 0) {
-            countdownUntilRestart -= 1;
-        }
+    if (countdownUntilRestart >= 0) {
+        countdownUntilRestart -= 1;
     }
 }
 
@@ -159,7 +157,7 @@ function Update() {
     if (role == "host") {
         if (tidTæller <= 0) {
             ShootNew();
-            tidTæller = 40 + tid + Math.random() * tid;
+            tidTæller = 20 + tid + Math.random() * tid;
         }
         tidTæller -= 1;
     }
@@ -206,11 +204,17 @@ function CheckScore() {
                     score++;
                 } else if (role == "player") {
                     let scoreMsg = {
-                        type: 'add to score',
-                        appelsinID: appelsiner[i].id
-                    }
+                        type: 'add to score'
+                    };
                     socket.sendMessage(scoreMsg);
                 }
+                // Fjern den andens appelsin
+                let spliceMsg = {
+                    type: 'destroy orange',
+                    ID: appelsiner[i].id
+                };
+                socket.sendMessage(spliceMsg);
+                // Fjern min egen appelsin
                 appelsiner.splice(i, 1);
             }
         }
@@ -219,6 +223,10 @@ function CheckScore() {
     if (role == "host") {
         if (missed >= 10) {
             state = "end";
+            let gameOverMsg = {
+                type: 'game over'
+            };
+            socket.sendMessage(gameOverMsg);
         }
 
         let scoreMsg = {
@@ -227,7 +235,6 @@ function CheckScore() {
             theMissed: missed
         };
         socket.sendMessage(scoreMsg);
-        console.log("sending score");
     }
 }
 
@@ -235,6 +242,8 @@ function ShootNew() {
     if (role == "host") {
         //Laver/skyder en ny appelsin af sted og ganger derefter tid med 0.98 sådan at det tager mindre tid mellem hver appelsin
         let nyAppelsin = new Appelsin();
+        // Giv appelsinen et id
+        nyAppelsin.GiveID();
         // Send appelsinen til den anden spiller
         let orangeMsg = {
             type: 'send orange',
@@ -247,7 +256,6 @@ function ShootNew() {
         };
         socket.sendMessage(orangeMsg);
         appelsiner.push(nyAppelsin);
-        
         // Gør intervallet mindre mellem hver appelsin der bliver skudt afsted
         tid *= 0.98;
     }
@@ -290,6 +298,10 @@ function TryAgain() {
     missed = 0;
     score = 0;
     countdownUntilRestart = 60;
+
+    socket = null;
+    role = null;
+
     state = "start";
 }
 
@@ -354,11 +366,14 @@ function handleMessage(sendedObject) {
             if (role == "host") {
                 // Tilføj til scoren
                 score++;
-                // Slet den korrekte appelsin
-                for (let i = appelsiner.length - 1; i >= 0; i--) {
-                    if (appelsiner[i].id == appelsinID) {
-                        appelsiner.splice(i, 1);
-                    }
+            }
+            break;
+
+        case 'destroy orange':
+            // Slet den korrekte appelsin
+            for (let i = appelsiner.length - 1; i >= 0; i--) {
+                if (appelsiner[i].id == sendedObject.ID) {
+                    appelsiner.splice(i, 1);
                 }
             }
             break;
@@ -367,6 +382,12 @@ function handleMessage(sendedObject) {
             if (role == "player") {
                 score = sendedObject.theScore;
                 missed = sendedObject.theMissed;
+            }
+            break;
+
+        case 'game over':
+            if (role == "player") {
+                state = "end";
             }
             break;
     }

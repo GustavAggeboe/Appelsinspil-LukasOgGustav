@@ -12,7 +12,7 @@ class Appelsin {
         this.gravity = .1;
         this.col = [200,100,0];
 
-        this.id = Math.random * 9999999;
+        this.id;
     }
 
     Update () {
@@ -34,6 +34,12 @@ class Appelsin {
         //fill(this.col);
         //ellipse(this.x, this.y, this.rad * 2, this.rad * 2);
         image(this.image, this.x, this.y, this.rad, this.rad);
+    }
+
+    GiveID() {
+        if (role == "host") {
+            this.id = Math.random() * 999999;
+        }
     }
 
     NewValues (xPos, yPos, xSpeed, ySpeed, radius, ID) {
