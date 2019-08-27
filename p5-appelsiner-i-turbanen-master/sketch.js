@@ -121,12 +121,11 @@ function GameLoop() {
     document.getElementById('readyToStart').hidden = true;
 
     // Send min lokation til den anden spiller
-    let posMsg = {
+    socket.sendMessage({
         type: 'playerPos',
         x: turban.x,
         y: turban.y
-    };
-    socket.sendMessage(posMsg);
+    });
 }
 
 let countdownUntilRestart = 60;
@@ -203,17 +202,15 @@ function CheckScore() {
                 if (role == "host") {
                     score++;
                 } else if (role == "player") {
-                    let scoreMsg = {
+                    socket.sendMessage({
                         type: 'add to score'
-                    };
-                    socket.sendMessage(scoreMsg);
+                    });
                 }
                 // Fjern den andens appelsin
-                let spliceMsg = {
+                socket.sendMessage({
                     type: 'destroy orange',
                     ID: appelsiner[i].id
-                };
-                socket.sendMessage(spliceMsg);
+                });
                 // Fjern min egen appelsin
                 appelsiner.splice(i, 1);
             }
@@ -223,18 +220,16 @@ function CheckScore() {
     if (role == "host") {
         if (missed >= 10) {
             state = "end";
-            let gameOverMsg = {
+            socket.sendMessage({
                 type: 'game over'
-            };
-            socket.sendMessage(gameOverMsg);
+            });
         }
 
-        let scoreMsg = {
+        socket.sendMessage({
             type: 'share scoring',
             theScore: score,
             theMissed: missed
-        };
-        socket.sendMessage(scoreMsg);
+        });
     }
 }
 
@@ -245,7 +240,7 @@ function ShootNew() {
         // Giv appelsinen et id
         nyAppelsin.GiveID();
         // Send appelsinen til den anden spiller
-        let orangeMsg = {
+        socket.sendMessage({
             type: 'send orange',
             xPos: nyAppelsin.x,
             yPos: nyAppelsin.y,
@@ -253,8 +248,7 @@ function ShootNew() {
             ySpeed: nyAppelsin.yspeed,
             radius: nyAppelsin.rad,
             ID: nyAppelsin.id
-        };
-        socket.sendMessage(orangeMsg);
+        });
         appelsiner.push(nyAppelsin);
         // Gør intervallet mindre mellem hver appelsin der bliver skudt afsted
         tid *= 0.98;
@@ -327,10 +321,9 @@ function ConnectToLobby() {
     socket.onMessage(handleMessage);
 
     role = "player";
-    let msg = {
+    socket.sendMessage({
         type: 'connected'
-    };
-    socket.sendMessage(msg);
+    });
 
 }
 
@@ -339,10 +332,9 @@ function handleMessage(sendedObject) {
 
         case 'connected':
             if (role == "host") {
-                let msg = {
+                socket.sendMessage({
                     type: 'ready'
-                };
-                socket.sendMessage(msg);
+                });
                 readyToStart = true;
                 startDate = new Date();
             }
