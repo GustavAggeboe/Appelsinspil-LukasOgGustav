@@ -81,12 +81,12 @@ function OtherPlayer() {
 
     this.Tegn = function() {
         if (role == "host") {
-            // Hvis jeg er host, så skal den anden være:
+            // Hvis man er host, så skal den anden være:
             image(this.girlImage, this.x - 134, this.y - 40, 360, 240);
             image(this.turbanImage, this.x, this.y, this.bred, this.dyb);
         }
         if (role == "player") {
-            // Hvis jeg er den anden spiller, så skal den anden være:
+            // Hvis man er den anden spiller, så skal den anden være:
             image(this.guyImage, this.x - 65, this.y - 10, 220, 220);
             image(this.turbanImage, this.x, this.y, this.bred, this.dyb);
         }
