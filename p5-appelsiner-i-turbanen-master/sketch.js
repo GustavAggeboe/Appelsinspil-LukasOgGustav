@@ -3,52 +3,52 @@ Først laver vi et nogle variable til at lave en appelsin
  - en kugle som vi vil skyde afsted og fange i en turban
 */
 
-// Movement
+// Movement variabler, til at afgøre om spilleren skal (blive ved med at) bevæge sig.
 let goingRight;
 let goingLeft;
 let goingUp;
 let goingDown;
 
-// Objekter
+// Egen spiller variabel
 let turban;
+// Anden spiller variabel
 let otherTurban;
+// Appelsin array
 let appelsiner = [];
 
-// Øvrige
+// Score variabel
 let score = 0;
+// Forbier variabel
 let missed = 0;
 
+// Tids variabel til indstilling af appelsin spawn-interval
 let tid = 100;
+// Nedtælleren til spawn-interval
 let tidTæller = 40 + tid + Math.random() * tid;
 
+// Gamestate
 let state = "start";
+// Egen rolle i spillet (spiller/host)
 let role = "none";
+// Variabeler til lobbyen
 let readyToStart = false;
 let startDate;
 let startCountdown = 3000;
-let realStartCountdown = 2000;
 
-let welcomeMessage;
-
+// Variabel til håndtering af sockets
 let socket;
 
 function setup() {
-    //Her laver vi vores canvas med størrelserne 'windowWidth' og 'windowHeight' for at få det til at fylde hele browseren
+    // Her laver vi vores canvas med størrelserne - 1000 i bredden, og 562.5 i højden
     createCanvas(1000, 562.5);
-    //Her laver vi vores turban
+    // Her laver vi vores spiller objekt
     turban = new Player(width / 2, height / 2, 90, 70, 10);
+    // Her laver vi den andens spiller objekt
     otherTurban = new OtherPlayer();
-    
-
-    //welcomeMessage = createElement('h1', 'Welcome to our game');
-    //document.getElementById("welcome").appendChild(welcomeMessage);
-    //welcomeMessage.position(width / 2, height / 2);
-    //let col = color(255, 255, 255);
-    //welcomeMessage.style('color', col);
-    //welcomeMessage.class('welcome-message');
 }
 
 function draw() {
+    // Kør de forskellige funktioner afhængigt af, hvilken gamestate spillet er i
     switch (state) {
         case "start":
             StartLoop();
