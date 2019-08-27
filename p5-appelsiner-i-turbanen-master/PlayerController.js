@@ -1,19 +1,21 @@
 /*
- * Dette script definerer klassen Kurv
+    Dette script definerer klasserne Player og OtherPlayer
 */
 
-function Player(x, y, bredde, dybde, speed) {
-    this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
-    this.guyImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
-    this.girlImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger_dame2.png");
-    this.bred = bredde;
-    this.dyb = dybde;
-    this.x = width / 2 - bredde / 2;
-    this.y = height / 1.3 - dybde / 2;
-    this.speed = speed;
-    this.col = [250,230,150];
+class Player {
+    constructor (bredde, dybde, speed) {
+        this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
+        this.guyImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
+        this.girlImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger_dame2.png");
+        this.bred = bredde;
+        this.dyb = dybde;
+        this.x = width / 2 - bredde / 2;
+        this.y = height / 1.3 - dybde / 2;
+        this.speed = speed;
+        this.col = [250,230,150];
+    }
 
-    this.Tegn = function() {
+    Tegn() {
         if (role == "player") {
             // Hvis jeg er den anden spiller, så skal jeg være:
             image(this.girlImage, this.x - 134, this.y - 40, 360, 240);
@@ -26,8 +28,12 @@ function Player(x, y, bredde, dybde, speed) {
         }
     }
 
-    this.Move = function(dir) { /*Denne funktion gør det muligt at flytte turbanen smoothly
-                                i stedet for at man skal trykke på knapperne hver gang man vil rykke den en lille smule*/
+    Move(dir) {
+        /*
+            Denne funktion gør det muligt at flytte turbanen smoothly i stedet for at man skal trykke på
+            knapperne hver gang man vil rykke den en lille smule. Samtidig, bliver der lavet restriktioner
+            på positionerne, så spilleren ikke bare forlader skærmen.
+        */
         if (dir == "up") {
             this.y -= this.speed;
             if (this.y < 0) {
@@ -53,8 +59,9 @@ function Player(x, y, bredde, dybde, speed) {
             }
         }
     }
+
     //Tag appelsinernes koordinater og hvis de passer med min turbans positions, så bliver grebet=true
-    this.Grebet = function(xa, ya, ra) {
+    Grebet(xa, ya, ra) {
         let yTolerence = 15;
         let yOffset = 10;
         let xTolerence = 10;
@@ -65,21 +72,21 @@ function Player(x, y, bredde, dybde, speed) {
             return false;
         }
     }
-
 }
 
-
-function OtherPlayer() {
-    //Finder de tre billeder vi bruger
-    this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
-    this.guyImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
-    this.girlImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger_dame2.png");
-    this.bred = 90;
-    this.dyb = 70;
-    this.x = width / 2;
-    this.y = height / 2;
-
-    this.Tegn = function() {
+class OtherPlayer {
+    constructor() {
+        //Finder de tre billeder vi bruger
+        this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
+        this.guyImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
+        this.girlImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger_dame2.png");
+        this.bred = 90;
+        this.dyb = 70;
+        this.x = width / 2;
+        this.y = height / 2;
+    }
+    
+    Tegn() {
         if (role == "host") {
             // Hvis man er host, så skal den anden være:
             image(this.girlImage, this.x - 134, this.y - 40, 360, 240);
@@ -92,7 +99,7 @@ function OtherPlayer() {
         }
     }
 
-    this.UpdatePos = function(xPos, yPos) {
+    UpdatePos(xPos, yPos) {
         this.x = xPos;
         this.y = yPos;
     }

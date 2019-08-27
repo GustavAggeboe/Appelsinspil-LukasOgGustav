@@ -42,7 +42,7 @@ function setup() {
     // Her laver vi vores canvas med størrelserne - 1000 i bredden, og 562.5 i højden
     createCanvas(1000, 562.5);
     // Her laver vi vores spiller objekt
-    turban = new Player(width / 2, height / 2, 90, 70, 10);
+    turban = new Player(90, 70, 10);
     // Her laver vi den andens spiller objekt
     otherTurban = new OtherPlayer();
 }
