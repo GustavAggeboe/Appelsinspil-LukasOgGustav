@@ -1,43 +1,30 @@
-
-
-.welcome-msg {
-    /* Her giver vi vores første welcome-msg en masse egenskaber, fx hvilken position den skal have og farven på teksten */
+.basicText {
     color: white;
     text-align: center;
     position: absolute;
-    top: 10%;
     left: 0;
     right: 0;
     z-index: 10;
+    font-size: 30px;
+}
 
+.welcome-msg {
+    /* Her giver vi vores første welcome-msg en masse egenskaber, fx hvilken position den skal have og farven på teksten */
+    top: 10%;
     font-size: 100px;
 }
 
 .welcome-msg2 {
     /* Her giver vi så vores anden welcome-msg de samme typer egenskaber, men bare med andre værdier */
-    color: white;
-    text-align: center;
-    position: absolute;
     top: 45%;
-    left: 0;
-    right: 0;
     bottom: 50%;
-    
-    z-index: 10;
-
     font-size: 35px;
 }
 
 .scoring {
-    color: white;
-    text-align: right;
-    position: absolute;
     top: 115px;
     right: 240px;
-    z-index: 10;
     padding: 10;
-
-    font-size: 30px;
 }
 
 .gameOver {
