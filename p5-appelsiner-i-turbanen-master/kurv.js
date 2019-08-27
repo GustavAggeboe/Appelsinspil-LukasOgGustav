@@ -53,7 +53,7 @@ function Player(x, y, bredde, dybde, speed) {
             }
         }
     }
-
+    //Tag appelsinernes koordinater og hvis de passer med min turbans positions, så bliver grebet=true
     this.Grebet = function(xa, ya, ra) {
         let yTolerence = 15;
         let yOffset = 10;
@@ -70,7 +70,7 @@ function Player(x, y, bredde, dybde, speed) {
 
 
 function OtherPlayer() {
-
+    //Finder de tre billeder vi bruger
     this.turbanImage = loadImage("/p5-appelsiner-i-turbanen-master/art/turban.png");
     this.guyImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger2.png");
     this.girlImage = loadImage("/p5-appelsiner-i-turbanen-master/art/Neger_dame2.png");
