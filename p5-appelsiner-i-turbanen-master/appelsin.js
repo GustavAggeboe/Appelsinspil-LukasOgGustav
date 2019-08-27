@@ -16,9 +16,6 @@ class Appelsin {
     }
 
     Update () {
-        if (role == "player") {
-            //console.log(this.x + ", " + this.y);
-        }
         // Set appelsinens placering
         this.x += this.xspeed;
         this.y += this.yspeed;
@@ -31,13 +28,12 @@ class Appelsin {
             let bounceSpeed = 10;
             this.yspeed += bounceSpeed;
         }
-        //fill(this.col);
-        //ellipse(this.x, this.y, this.rad * 2, this.rad * 2);
+        // Tegn appelsinbilledet ved de rigtige koordinater.
         image(this.image, this.x, this.y, this.rad, this.rad);
     }
 
     GiveID() {
-        //Giver appelsinerne id'er så de kan blive synkroniseret med den anden spiller
+        // Giver appelsinerne id'er så de kan blive synkroniseret med den anden spiller
         if (role == "host") {
             this.id = Math.random() * 999999;
         }
