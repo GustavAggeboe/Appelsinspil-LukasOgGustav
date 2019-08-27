@@ -37,6 +37,7 @@ class Appelsin {
     }
 
     GiveID() {
+        //Giver appelsinerne id'er så de kan blive synkroniseret med den anden spiller
         if (role == "host") {
             this.id = Math.random() * 999999;
         }

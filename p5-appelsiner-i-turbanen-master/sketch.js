@@ -216,7 +216,7 @@ function CheckScore() {
             }
         }
     }
-
+    //Hvis man misser 10 appelsiner så taber man og spillet viser 'game over'
     if (role == "host") {
         if (missed >= 10) {
             state = "end";
