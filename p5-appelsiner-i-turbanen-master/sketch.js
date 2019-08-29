@@ -427,9 +427,7 @@ function handleMessage(sendedObject) {
             // Slet den korrekte appelsin, når den anden griber én.
             for (let i = appelsiner.length - 1; i >= 0; i--) {
                 if (appelsiner[i].id == sendedObject.ID) {
-                    if (!grebetAppelsiner.includes(sendedObject.ID)) {
-                        appelsiner.splice(i, 1);
-                    }
+                    appelsiner.splice(i, 1);
                 }
             }
             break;
