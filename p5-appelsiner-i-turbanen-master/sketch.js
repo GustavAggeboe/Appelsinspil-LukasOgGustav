@@ -10,9 +10,9 @@ let goingUp;
 let goingDown;
 
 // Egen spiller variabel
-let turban;
+let minKarakter;
 // Anden spiller variabel
-let otherTurban;
+let denAndensKarakter;
 // Appelsin array
 let appelsiner = [];
 let grebetAppelsiner = [];
@@ -43,9 +43,9 @@ function setup() {
     // Her laver vi vores canvas med størrelserne - 1000 i bredden, og 562.5 i højden
     createCanvas(1000, 562.5);
     // Her laver vi vores spiller objekt
-    turban = new Player(90, 70, 10);
+    minKarakter = new Player(90, 70, 10);
     // Her laver vi den andens spiller objekt
-    otherTurban = new OtherPlayer();
+    denAndensKarakter = new OtherPlayer();
 }
 
 function draw() {
@@ -124,8 +124,8 @@ function GameLoop() {
     // Send min lokation til den anden spiller.
     socket.sendMessage({
         type: 'playerPos',
-        x: turban.x,
-        y: turban.y
+        x: minKarakter.x,
+        y: minKarakter.y
     });
 }
 
@@ -150,8 +150,15 @@ function Update() {
     }
 
     // Her vises turbanerne
-    turban.Tegn();
-    otherTurban.Tegn();
+    // Vi sørger for at det altid er den samme der er foran
+    if (role == "host") {
+        minKarakter.Tegn();
+        denAndensKarakter.Tegn();
+    } else if (role == "player") {
+        denAndensKarakter.Tegn();
+        minKarakter.Tegn();
+    }
+
 
     /*
     -----   Nogle til skal kun gøre for hosten, da han skal håndtere mange ting.
@@ -176,16 +183,16 @@ function Update() {
 function Move() {
     //Gør at turbanen bevæger sig, hvis en eller flere knapper bliver holdt nede
     if (goingRight) {
-        turban.Move("right");
+        minKarakter.Move("right");
     }
     if (goingLeft) {
-        turban.Move("left");
+        minKarakter.Move("left");
     }
     if (goingUp) {
-        turban.Move("up");
+        minKarakter.Move("up");
     }
     if (goingDown) {
-        turban.Move("down");
+        minKarakter.Move("down");
     }
 }
 
@@ -207,7 +214,7 @@ function CheckScore() {
     at der skal tilføjes et point*/
     for (let i = appelsiner.length - 1; i >= 0; i--) {
         if (appelsiner[i].yspeed > 0) {
-            if (turban.Grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
+            if (minKarakter.Grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
                 if (role == "host") {
                     // Tjek at den grebet ikke er grebet i forvejen
                     if (!grebetAppelsiner.includes(appelsiner[i].id)) {
@@ -391,7 +398,7 @@ function handleMessage(sendedObject) {
         // Hvis beskedns type er 'playerPos'.
         case 'playerPos':
             // Uanset hvem jeg er, så skal jeg modtage den andens position, og opdatere min version af den anden spiller.
-            otherTurban.UpdatePos(sendedObject.x, sendedObject.y);
+            denAndensKarakter.UpdatePos(sendedObject.x, sendedObject.y);
             break;
         // Hvis beskedns type er 'send orange'.
         case 'send orange':
