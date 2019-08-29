@@ -235,7 +235,9 @@ function CheckScore() {
                     ID: appelsiner[i].id
                 });
                 // Fjern min egen appelsin
-                appelsiner.splice(i, 1);
+                if (!grebetAppelsiner.includes(appelsiner[i].id)) {
+                    appelsiner.splice(i, 1);
+                }
             }
         }
     }
@@ -427,7 +429,9 @@ function handleMessage(sendedObject) {
             // Slet den korrekte appelsin, når den anden griber én.
             for (let i = appelsiner.length - 1; i >= 0; i--) {
                 if (appelsiner[i].id == sendedObject.ID) {
-                    appelsiner.splice(i, 1);
+                    if (!grebetAppelsiner.includes(sendedObject.ID)) {
+                        appelsiner.splice(i, 1);
+                    }
                 }
             }
             break;
