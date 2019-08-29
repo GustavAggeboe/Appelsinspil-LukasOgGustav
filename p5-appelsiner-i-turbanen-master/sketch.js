@@ -15,6 +15,7 @@ let turban;
 let otherTurban;
 // Appelsin array
 let appelsiner = [];
+let grebetAppelsiner = [];
 
 // Score variabel
 let score = 0;
@@ -208,12 +209,19 @@ function CheckScore() {
         if (appelsiner[i].yspeed > 0) {
             if (turban.Grebet(appelsiner[i].x, appelsiner[i].y, appelsiner[i].rad)) {
                 if (role == "host") {
-                    score++;
+                    // Tjek at den grebet ikke er grebet i forvejen
+                    if (!grebetAppelsiner.includes(appelsiner[i].id)) {
+                        grebetAppelsiner.push(appelsiner[i].id);
+                        score++;
+                    }
+
                 } else if (role == "player") {
                     socket.sendMessage({
-                        type: 'add to score'
+                        type: 'add to score',
+                        ID: appelsiner[i].id
                     });
                 }
+
                 // Hvis jeg har grebet en appelsin, så skal jeg sige til den anden spiller, at den samme appelsin skal fjernes.
                 socket.sendMessage({
                     type: 'destroy orange',
@@ -399,8 +407,12 @@ function handleMessage(sendedObject) {
         // Hvis beskedns type er 'add to score'.
         case 'add to score':
             if (role == "host") {
-                // Tilføj til hostens score
-                score++;
+                // Tjek at den grebet ikke er grebet i forvejen
+                if (!grebetAppelsiner.includes(sendedObject.ID)) {
+                    grebetAppelsiner.push(appelsiner[i].id);
+                    // Tilføj til hostens score
+                    score++;
+                }
             }
             break;
         // Hvis beskedns type er 'destroy orange'.
