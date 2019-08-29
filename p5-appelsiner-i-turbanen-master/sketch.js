@@ -204,8 +204,10 @@ function CheckScore() {
         if (appelsiner[i].x > width || appelsiner[i].y > height) {
             appelsiner.splice(i, 1);
             if (role == "host") {
-                if (!grebetAppelsiner.includes(appelsiner[i].id)) {
-                    missed += 1;
+                if (grebetAppelsiner.length > 0) {
+                    if (!grebetAppelsiner.includes(appelsiner[i].id)) {
+                        missed += 1;
+                    }
                 }
             }
         }
