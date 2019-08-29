@@ -416,7 +416,7 @@ function handleMessage(sendedObject) {
             if (role == "host") {
                 // Tjek at den grebet ikke er grebet i forvejen
                 if (!grebetAppelsiner.includes(sendedObject.ID)) {
-                    grebetAppelsiner.push(appelsiner[i].id);
+                    grebetAppelsiner.push(sendedObject.ID);
                     // Tilføj til hostens score
                     score++;
                 }
